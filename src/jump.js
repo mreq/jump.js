@@ -24,6 +24,8 @@ const jumper = () => {
 
   let callback        // to call when done scrolling            (function)
 
+  let scrolling       // true whilst scrolling                  (boolean)
+
   // scroll position helper
 
   function location() {
@@ -66,6 +68,8 @@ const jumper = () => {
     // scroll to it
     scrollTo(next)
 
+    scrolling = true
+
     // check progress
     timeElapsed < duration
       ? requestAnimationFrame(loop)       // continue scroll loop
@@ -94,6 +98,9 @@ const jumper = () => {
 
     // reset time for next jump
     timeStart = false
+
+    // we're done scrolling
+    scrolling = false
   }
 
   // API
@@ -164,8 +171,14 @@ const jumper = () => {
       break
     }
 
-    // start the loop
-    requestAnimationFrame(loop)
+    // start the loop if we're not already scrolling
+    if (!scrolling) {
+      requestAnimationFrame(loop)
+    }
+    else {
+      // reset time for next jump
+      timeStart = false
+    }
   }
 
   // expose only the jump method
